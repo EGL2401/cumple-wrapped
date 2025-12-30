@@ -1,0 +1,349 @@
+<!doctype html>
+<html lang="es">
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width,initial-scale=1" />
+  <title>🎧</title>
+
+  <style>
+    :root{
+      --accent:#1ed760;
+      --txt:#ffffff;
+    }
+
+    *{ box-sizing:border-box }
+
+    body{
+      margin:0;
+      font-family: system-ui,-apple-system,Segoe UI,Roboto,Helvetica,Arial;
+      color:var(--txt);
+      background:#000;
+      overflow:hidden;
+    }
+
+    .wrap{
+      height:100svh;
+      width:100vw;
+      position:relative;
+    }
+
+    .slide{
+      position:absolute;
+      inset:0;
+      display:flex;
+      flex-direction:column;
+      justify-content:center;
+      align-items:center;
+      padding:28px;
+      opacity:0;
+      transform:scale(1.02);
+      transition:opacity .45s ease, transform .45s ease;
+      text-align:center;
+    }
+
+    .slide.active{
+      opacity:1;
+      transform:scale(1);
+    }
+
+    /* Fondos */
+    .bg1{
+      background:
+        radial-gradient(1200px 800px at 20% 20%, #6a00ff33, transparent 55%),
+        linear-gradient(135deg, #0b0b10, #1b0f2e);
+    }
+
+    .bg2{
+      background:
+        radial-gradient(900px 700px at 70% 30%, #00ffd533, transparent 55%),
+        linear-gradient(135deg, #070a12, #0a2a2a);
+    }
+
+    .bg3{
+      background:
+        radial-gradient(900px 700px at 30% 70%, #ff2a6d33, transparent 55%),
+        linear-gradient(135deg, #070a12, #2b0a14);
+    }
+
+    .bg4{
+      background:
+        radial-gradient(900px 700px at 60% 40%, #ffd0002b, transparent 55%),
+        linear-gradient(135deg, #050509, #101018);
+    }
+
+    /* Barra tipo stories */
+    .bar{
+      position:absolute;
+      top:16px;
+      left:16px;
+      right:16px;
+      height:4px;
+      display:flex;
+      gap:8px;
+      z-index:10;
+    }
+
+    .bar span{
+      flex:1;
+      background:#ffffff1e;
+      border-radius:99px;
+      overflow:hidden;
+    }
+
+    .bar i{
+      display:block;
+      height:100%;
+      width:0%;
+      background:linear-gradient(90deg, var(--accent), #7cffc2);
+      border-radius:99px;
+      transition:width .35s ease;
+    }
+
+    .kicker{
+      letter-spacing:.16em;
+      text-transform:uppercase;
+      font-weight:700;
+      opacity:.85;
+      font-size:12px;
+      animation: rise .7s ease both;
+    }
+
+    .big{
+      margin:14px 0 0;
+      font-size:clamp(34px, 7vw, 64px);
+      line-height:1.02;
+      font-weight:800;
+      animation: rise .85s ease .05s both;
+    }
+
+    .sub{
+      margin:14px 0 0;
+      max-width:720px;
+      font-size:clamp(16px, 3.5vw, 20px);
+      line-height:1.35;
+      opacity:.92;
+      animation: rise .9s ease .1s both;
+    }
+
+    .chip{
+      margin-top:18px;
+      padding:10px 14px;
+      border:1px solid #ffffff22;
+      border-radius:999px;
+      backdrop-filter:blur(10px);
+      background:#ffffff10;
+      font-weight:650;
+      animation: rise .9s ease .15s both;
+    }
+
+    .btn{
+      margin-top:22px;
+      padding:14px 18px;
+      border-radius:14px;
+      border:1px solid #ffffff22;
+      background:#ffffff12;
+      color:var(--txt);
+      font-weight:750;
+      cursor:pointer;
+      display:inline-flex;
+      align-items:center;
+      gap:10px;
+      text-decoration:none;
+      transition:background .2s ease;
+    }
+
+    .btn:hover{
+      background:#ffffff18;
+    }
+
+    .hint{
+      position:absolute;
+      bottom:18px;
+      opacity:.65;
+      font-size:12px;
+    }
+
+    @keyframes rise{
+      from{
+        opacity:0;
+        transform:translateY(14px);
+        filter:blur(6px);
+      }
+      to{
+        opacity:1;
+        transform:translateY(0);
+        filter:blur(0);
+      }
+    }
+
+    /* Fotos */
+    .photo{
+      width:min(78vw, 420px);
+      border-radius:18px;
+      margin-top:18px;
+      box-shadow:0 20px 60px #00000066;
+      filter:brightness(.95) contrast(1.05);
+      animation: rise .9s ease .2s both;
+    }
+
+    .photo-small{
+      width:90px;
+      margin-top:14px;
+      opacity:.9;
+      filter:drop-shadow(0 8px 18px #00000055);
+      animation: rise .8s ease .3s both;
+    }
+
+    /* Decoración sutil :) */
+    .decor{
+      position:absolute;
+      inset:0;
+      pointer-events:none;
+      opacity:.06;
+      background-size:52px 52px;
+      background-repeat:repeat;
+    }
+
+    .decor.smiley{
+      background-image:url("data:image/svg+xml;utf8,\
+<svg xmlns='http://www.w3.org/2000/svg' width='40' height='40'>\
+<text x='0' y='26' font-size='18' font-family='monospace' fill='white'>:)</text>\
+</svg>");
+    }
+  </style>
+</head>
+
+<body>
+  <div class="wrap" id="wrap">
+
+    <div class="bar">
+      <span><i></i></span>
+      <span><i></i></span>
+      <span><i></i></span>
+      <span><i></i></span>
+    </div>
+
+    <!-- SLIDE 1 -->
+    <section class="slide bg1 active">
+      <div class="kicker">mejor con audífonos</div>
+      <div class="big">Ok.<br>Dos minutos.</div>
+      <div class="sub">Toca <b>Iniciar</b> para activar el audio.</div>
+      <button class="btn" id="startBtn">Iniciar ▶</button>
+      <div class="hint">Click derecha = siguiente · izquierda = atrás</div>
+    </section>
+
+    <!-- SLIDE 2 -->
+    <section class="slide bg2">
+      <div class="decor smiley"></div>
+      <div class="kicker">capítulo 1</div>
+      <div class="big">Hoy cumple años<br>alguien…</div>
+      <div class="sub">…que se me cruzó en el camino<br>y no quise dejarlo pasar.</div>
+      <img src="foto1.jpg" class="photo" alt="">
+      <div class="chip">→</div>
+    </section>
+
+    <!-- SLIDE 3 -->
+    <section class="slide bg3">
+      <div class="decor smiley"></div>
+      <div class="kicker">capítulo 2</div>
+      <div class="big">Podía mandar<br>el mensaje típico…</div>
+      <div class="sub">pero preferí hacer esto<br>(porque sí me importó).</div>
+      <img src="foto2.jpg" class="photo" alt="">
+      <div class="chip">→</div>
+    </section>
+
+    <!-- SLIDE 4 -->
+    <section class="slide bg4">
+      <div class="kicker">final</div>
+      <div class="big">Feliz cumple ✨</div>
+      <div class="sub">Te dejo la última parte aquí 👇</div>
+
+      <img src="foto3.jpg" class="photo" alt="">
+
+      <!-- CAMBIA ESTE LINK -->
+      <a class="btn" id="finalLink"
+         href="PON_AQUI_TU_LINK_FINAL"
+         target="_blank" rel="noreferrer">
+        Tu sorpresa 🎁
+      </a>
+
+      <!-- pin de pizza -->
+      <img src="foto4.jpg" class="photo-small" alt="">
+
+      <div class="hint">PD: sí, esto era necesario.</div>
+    </section>
+
+    <audio id="audio"></audio>
+  </div>
+
+  <script>
+    const slides = [...document.querySelectorAll('.slide')];
+    const bars = [...document.querySelectorAll('.bar i')];
+    const audio = document.getElementById('audio');
+    const startBtn = document.getElementById('startBtn');
+    const wrap = document.getElementById('wrap');
+    const finalLink = document.getElementById('finalLink');
+
+    const track1 = "track1.mp3"; // inicia en 0:11
+    const track2 = "track2.mp3"; // inicia en 0:19
+    const track3 = "track3.mp3"; // inicia en 1:25
+
+    const tracks  = [track1, track1, track2, track3];
+    const offsets = [11, 11, 19, 85];
+
+    let idx = 0;
+    let started = false;
+
+    tracks.forEach(src=>{
+      const a = new Audio();
+      a.preload="auto";
+      a.src=src;
+    });
+
+    function setBar(n){
+      bars.forEach((b,i)=> b.style.width = (i <= n ? "100%" : "0%"));
+    }
+
+    function playTrackForSlide(i){
+      if(!started) return;
+
+      audio.pause();
+      audio.currentTime = 0;
+
+      audio.src = tracks[i];
+
+      audio.onloadedmetadata = ()=>{
+        audio.currentTime = offsets[i] || 0;
+        audio.play().catch(()=>{});
+      };
+    }
+
+    function go(n){
+      idx = Math.max(0, Math.min(slides.length-1, n));
+      slides.forEach((s,i)=> s.classList.toggle('active', i===idx));
+      setBar(idx);
+      playTrackForSlide(idx);
+    }
+
+    function next(){ if(idx < slides.length-1) go(idx+1); }
+    function prev(){ if(idx > 0) go(idx-1); }
+
+    startBtn.addEventListener('click', ()=>{
+      started = true;
+      go(1);
+    });
+
+    wrap.addEventListener('click', e=>{
+      if(!started) return;
+      if(e.target === finalLink) return;
+
+      const x = e.clientX;
+      const w = window.innerWidth;
+      if(x < w*0.35) prev();
+      else next();
+    });
+
+    setBar(0);
+  </script>
+</body>
+</html>
