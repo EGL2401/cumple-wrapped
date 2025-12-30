@@ -46,6 +46,14 @@
     .bg3{ background:linear-gradient(135deg,#070a12,#2b0a14); }
     .bg4{ background:linear-gradient(135deg,#050509,#101018); }
 
+    /* 🌻 Fondo cálido tipo “girasoles” para slides finales */
+    .bg-sunflower{
+      background:
+        radial-gradient(900px 650px at 65% 30%, rgba(255, 196, 0, .18), transparent 55%),
+        radial-gradient(850px 650px at 25% 75%, rgba(255, 176, 0, .12), transparent 58%),
+        linear-gradient(135deg, #060607, #141014);
+    }
+
     .bar{
       position:absolute; top:16px; left:16px; right:16px;
       height:4px; display:flex; gap:8px; z-index:10;
@@ -159,16 +167,16 @@
     <div class="sub">las cosas aburridas no son tus favoritas</div>
   </section>
 
-  <!-- 6 -->
-  <section class="slide bg4">
+  <!-- 6 (🌻 fondo girasol + mosaico) -->
+  <section class="slide bg-sunflower">
     <div class="decor girasoles"></div>
     <div class="big">Te quiero mucho<br>guapa…</div>
     <div class="sub">y quería decirtelo diferente.</div>
     <img src="foto3.jpg" class="photo">
   </section>
 
-  <!-- 7 -->
-  <section class="slide bg4">
+  <!-- 7 (🌻 fondo girasol + mosaico) -->
+  <section class="slide bg-sunflower">
     <div class="decor girasoles"></div>
     <div class="big">Siempre estaré<br>para ti :)</div>
     <img src="foto4.jpg" class="photo-small">
