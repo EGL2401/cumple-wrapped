@@ -26,7 +26,7 @@
       position:relative;
     }
 
-    /* IMPORTANT: only active slide can receive pointer events */
+    /* Only active slide receives pointer events */
     .slide{
       position:absolute;
       inset:0;
@@ -39,12 +39,12 @@
       transform:scale(1.02);
       transition:opacity .45s ease, transform .45s ease;
       text-align:center;
-      pointer-events:none; /* prevents invisible slides from being clickable */
+      pointer-events:none;
     }
     .slide.active{
       opacity:1;
       transform:scale(1);
-      pointer-events:auto; /* only active slide is clickable */
+      pointer-events:auto;
     }
 
     /* Backgrounds */
@@ -69,7 +69,7 @@
         linear-gradient(135deg, #050509, #101018);
     }
 
-    /* Story progress bar */
+    /* Story progress bar (7 slides => 7 segments) */
     .bar{
       position:absolute;
       top:16px;
@@ -117,7 +117,7 @@
     }
     .sub{
       margin:14px 0 0;
-      max-width:820px;
+      max-width:860px;
       font-size:clamp(16px, 3.5vw, 22px);
       line-height:1.35;
       opacity:.92;
@@ -175,18 +175,17 @@
       animation: rise .9s ease .2s both;
     }
 
-    /* Subtle mosaic layer */
+    /* Mosaic layer */
     .decor{
       position:absolute;
       inset:0;
       pointer-events:none;
-      opacity:.07;               /* sutil */
-      background-size:56px 56px; /* tamaño del mosaico */
+      opacity:.07;
+      background-size:56px 56px;
       background-repeat:repeat;
-      mix-blend-mode: normal;
     }
 
-    /* :) mosaic (monospace) */
+    /* :) mosaic */
     .decor.smiley{
       background-image:url("data:image/svg+xml;utf8,\
 <svg xmlns='http://www.w3.org/2000/svg' width='44' height='44'>\
@@ -229,7 +228,6 @@
 
 <body>
   <div class="wrap" id="wrap">
-    <!-- 7 slides => 7 bars -->
     <div class="bar" aria-hidden="true">
       <span><i></i></span>
       <span><i></i></span>
@@ -249,7 +247,7 @@
       <div class="hint">Tap derecha = siguiente · izquierda = atrás</div>
     </section>
 
-    <!-- SLIDE 2 -->
+    <!-- SLIDE 2 (Foto 1) -->
     <section class="slide bg2" aria-label="Feliz cumpleaños">
       <div class="decor smiley"></div>
       <div class="big big-xl">Feliz cumpleaños</div>
@@ -258,7 +256,7 @@
       <div class="chip">→</div>
     </section>
 
-    <!-- SLIDE 3 -->
+    <!-- SLIDE 3 (continues Track 1, no restart) -->
     <section class="slide bg2" aria-label="Simbolismos">
       <div class="decor smiley"></div>
       <div class="kicker">nota</div>
@@ -267,7 +265,7 @@
       <div class="chip">→</div>
     </section>
 
-    <!-- SLIDE 4 -->
+    <!-- SLIDE 4 (Foto 2) -->
     <section class="slide bg3" aria-label="Cambiar el juego">
       <div class="decor panditas"></div>
       <div class="kicker">capítulo</div>
@@ -277,11 +275,12 @@
       <div class="chip">→</div>
     </section>
 
-    <!-- SLIDE 5 -->
+    <!-- SLIDE 5 (Foto 3) -->
     <section class="slide bg3" aria-label="Nada aburrido">
       <div class="decor panditas"></div>
       <div class="big">porque sé que</div>
       <div class="sub">las cosas aburridas no son tus favoritas</div>
+      <img src="foto3.jpg" class="photo" alt="">
       <div class="chip">→</div>
     </section>
 
@@ -289,15 +288,15 @@
     <section class="slide bg4" aria-label="Te quiero mucho">
       <div class="decor girasoles"></div>
       <div class="big">Te quiero mucho<br>guapa…</div>
-      <img src="foto3.jpg" class="photo" alt="">
+      <div class="sub">y quería que lo sintieras distinto.</div>
       <div class="chip">→</div>
     </section>
 
-    <!-- SLIDE 7 -->
+    <!-- SLIDE 7 (Foto 4) -->
     <section class="slide bg4" aria-label="Siempre">
       <div class="decor girasoles"></div>
       <div class="big">Siempre estaré<br>para ti :)</div>
-      <div class="sub">Fin.</div>
+      <img src="foto4.jpg" class="photo" alt="">
       <div class="hint">PD: sí, esto era necesario.</div>
     </section>
 
@@ -317,16 +316,20 @@
     const track2 = "track2.mp3"; // start at 0:19
     const track3 = "track3.mp3"; // start at 1:25
 
-    // 7 slides mapped to 3 tracks (wrapped style)
-    // Slide 1 not played until started; we jump to slide 2 on start.
-    const tracks  = [track1, track1, track1, track2, track2, track3, track3];
-    const offsets = [11,     11,     11,     19,     19,     85,     85];
+    // 7 slides mapped to 3 tracks
+    // IMPORTANT: slide 3 continues track 1 WITHOUT restarting
+    const trackFor = [track1, track1, track1, track2, track2, track3, track3];
+    const startAt  = [11,     11,     11,     19,     19,     85,     85];
+
+    // Slides that should NOT trigger a track restart (continuation)
+    // Here: slide 3 continues from slide 2
+    const continueMusicOn = new Set([2]); // 0-based index => slide 3
 
     let idx = 0;
     let started = false;
 
-    // Preload to reduce lag
-    [...new Set(tracks)].forEach(src => {
+    // Preload unique tracks
+    [...new Set(trackFor)].forEach(src => {
       const a = new Audio();
       a.preload = "auto";
       a.src = src;
@@ -336,29 +339,46 @@
       bars.forEach((b,i) => b.style.width = (i <= n ? "100%" : "0%"));
     }
 
-    function playTrackForSlide(i){
+    function ensurePlaying(){
+      if(audio.paused){
+        audio.play().catch(()=>{});
+      }
+    }
+
+    function playForSlide(i, prevIdx){
       if(!started) return;
 
-      const src = tracks[i];
-      const startAt = offsets[i] || 0;
+      const src = trackFor[i];
+      const abs = new URL(src, window.location.href).href;
+
+      const sameTrack = (audio.src === abs);
+      const shouldContinue = continueMusicOn.has(i) && sameTrack;
+
+      if(shouldContinue){
+        // do not seek; keep currentTime and keep playing
+        ensurePlaying();
+        return;
+      }
+
+      // otherwise, (re)load and seek to the configured offset
+      const seekTo = startAt[i] || 0;
 
       try{
         audio.pause();
-        audio.currentTime = 0;
       } catch {}
 
       audio.onloadedmetadata = null;
 
-      // Compare absolute href to avoid unnecessary reloads
-      const abs = new URL(src, window.location.href).href;
-      if(audio.src !== abs) audio.src = src;
+      if(!sameTrack){
+        audio.src = src;
+      }
 
       const seekAndPlay = () => {
         const dur = audio.duration;
         if(Number.isFinite(dur) && dur > 0){
-          audio.currentTime = Math.min(startAt, Math.max(0, dur - 0.25));
+          audio.currentTime = Math.min(seekTo, Math.max(0, dur - 0.25));
         } else {
-          audio.currentTime = startAt;
+          audio.currentTime = seekTo;
         }
         audio.play().catch(()=>{});
       };
@@ -372,28 +392,28 @@
     }
 
     function go(n){
+      const prev = idx;
       idx = Math.max(0, Math.min(slides.length - 1, n));
       slides.forEach((s,i)=> s.classList.toggle('active', i === idx));
       setBar(idx);
-      playTrackForSlide(idx);
+      playForSlide(idx, prev);
     }
 
     function next(){ if(idx < slides.length - 1) go(idx + 1); }
     function prev(){ if(idx > 0) go(idx - 1); }
 
-    // Start: stop propagation so it doesn't trigger navigation
     startBtn.addEventListener('click', (e)=>{
       e.preventDefault();
       e.stopPropagation();
       started = true;
-      go(1); // jump to Slide 2
+      go(1); // jump to slide 2
     });
 
     // Tap navigation: pointerup works on mobile + desktop
     wrap.addEventListener('pointerup', (e)=>{
       if(!started) return;
 
-      // If user tapped a button (only exists on slide 1), don't navigate
+      // if they tapped the start button, don't navigate
       if(e.target.closest('button')) return;
 
       const x = e.clientX;
@@ -403,7 +423,7 @@
       else next();
     });
 
-    // Optional: keyboard navigation on desktop
+    // Desktop keyboard navigation
     window.addEventListener('keydown', (e)=>{
       if(!started) return;
       if(e.key === "ArrowRight") next();
