@@ -6,12 +6,9 @@
   <title>🎧</title>
 
   <style>
-    :root{
-      --accent:#1ed760;
-      --txt:#ffffff;
-    }
+    :root{ --accent:#1ed760; --txt:#ffffff; }
 
-    *{ box-sizing:border-box }
+    *{ box-sizing:border-box; }
 
     body{
       margin:0;
@@ -19,6 +16,8 @@
       color:var(--txt);
       background:#000;
       overflow:hidden;
+      -webkit-tap-highlight-color: transparent;
+      user-select:none;
     }
 
     .wrap{
@@ -27,6 +26,7 @@
       position:relative;
     }
 
+    /* IMPORTANT: only active slide can receive pointer events */
     .slide{
       position:absolute;
       inset:0;
@@ -39,39 +39,37 @@
       transform:scale(1.02);
       transition:opacity .45s ease, transform .45s ease;
       text-align:center;
+      pointer-events:none; /* 👈 prevents invisible slides from being clickable */
     }
-
     .slide.active{
       opacity:1;
       transform:scale(1);
+      pointer-events:auto; /* 👈 only active slide is clickable */
     }
 
-    /* Fondos */
+    /* Backgrounds */
     .bg1{
       background:
         radial-gradient(1200px 800px at 20% 20%, #6a00ff33, transparent 55%),
         linear-gradient(135deg, #0b0b10, #1b0f2e);
     }
-
     .bg2{
       background:
         radial-gradient(900px 700px at 70% 30%, #00ffd533, transparent 55%),
         linear-gradient(135deg, #070a12, #0a2a2a);
     }
-
     .bg3{
       background:
         radial-gradient(900px 700px at 30% 70%, #ff2a6d33, transparent 55%),
         linear-gradient(135deg, #070a12, #2b0a14);
     }
-
     .bg4{
       background:
         radial-gradient(900px 700px at 60% 40%, #ffd0002b, transparent 55%),
         linear-gradient(135deg, #050509, #101018);
     }
 
-    /* Barra tipo stories */
+    /* Story progress bar */
     .bar{
       position:absolute;
       top:16px;
@@ -81,15 +79,14 @@
       display:flex;
       gap:8px;
       z-index:10;
+      pointer-events:none;
     }
-
     .bar span{
       flex:1;
       background:#ffffff1e;
       border-radius:99px;
       overflow:hidden;
     }
-
     .bar i{
       display:block;
       height:100%;
@@ -107,7 +104,6 @@
       font-size:12px;
       animation: rise .7s ease both;
     }
-
     .big{
       margin:14px 0 0;
       font-size:clamp(34px, 7vw, 64px);
@@ -115,7 +111,6 @@
       font-weight:800;
       animation: rise .85s ease .05s both;
     }
-
     .sub{
       margin:14px 0 0;
       max-width:720px;
@@ -124,7 +119,6 @@
       opacity:.92;
       animation: rise .9s ease .1s both;
     }
-
     .chip{
       margin-top:18px;
       padding:10px 14px;
@@ -150,33 +144,24 @@
       gap:10px;
       text-decoration:none;
       transition:background .2s ease;
+      touch-action: manipulation;
     }
-
-    .btn:hover{
-      background:#ffffff18;
-    }
+    .btn:hover{ background:#ffffff18; }
 
     .hint{
       position:absolute;
       bottom:18px;
       opacity:.65;
       font-size:12px;
+      pointer-events:none;
     }
 
     @keyframes rise{
-      from{
-        opacity:0;
-        transform:translateY(14px);
-        filter:blur(6px);
-      }
-      to{
-        opacity:1;
-        transform:translateY(0);
-        filter:blur(0);
-      }
+      from{ opacity:0; transform:translateY(14px); filter:blur(6px); }
+      to{ opacity:1; transform:translateY(0); filter:blur(0); }
     }
 
-    /* Fotos */
+    /* Photos */
     .photo{
       width:min(78vw, 420px);
       border-radius:18px;
@@ -185,7 +170,6 @@
       filter:brightness(.95) contrast(1.05);
       animation: rise .9s ease .2s both;
     }
-
     .photo-small{
       width:90px;
       margin-top:14px;
@@ -194,7 +178,7 @@
       animation: rise .8s ease .3s both;
     }
 
-    /* Decoración sutil :) */
+    /* Subtle :) mosaic */
     .decor{
       position:absolute;
       inset:0;
@@ -203,7 +187,6 @@
       background-size:52px 52px;
       background-repeat:repeat;
     }
-
     .decor.smiley{
       background-image:url("data:image/svg+xml;utf8,\
 <svg xmlns='http://www.w3.org/2000/svg' width='40' height='40'>\
@@ -215,8 +198,7 @@
 
 <body>
   <div class="wrap" id="wrap">
-
-    <div class="bar">
+    <div class="bar" aria-hidden="true">
       <span><i></i></span>
       <span><i></i></span>
       <span><i></i></span>
@@ -224,16 +206,16 @@
     </div>
 
     <!-- SLIDE 1 -->
-    <section class="slide bg1 active">
+    <section class="slide bg1 active" aria-label="Inicio">
       <div class="kicker">mejor con audífonos</div>
       <div class="big">Ok.<br>Dos minutos.</div>
       <div class="sub">Toca <b>Iniciar</b> para activar el audio.</div>
-      <button class="btn" id="startBtn">Iniciar ▶</button>
-      <div class="hint">Click derecha = siguiente · izquierda = atrás</div>
+      <button class="btn" id="startBtn" type="button">Iniciar ▶</button>
+      <div class="hint">Tap derecha = siguiente · izquierda = atrás</div>
     </section>
 
     <!-- SLIDE 2 -->
-    <section class="slide bg2">
+    <section class="slide bg2" aria-label="Capítulo 1">
       <div class="decor smiley"></div>
       <div class="kicker">capítulo 1</div>
       <div class="big">Hoy cumple años<br>alguien…</div>
@@ -243,7 +225,7 @@
     </section>
 
     <!-- SLIDE 3 -->
-    <section class="slide bg3">
+    <section class="slide bg3" aria-label="Capítulo 2">
       <div class="decor smiley"></div>
       <div class="kicker">capítulo 2</div>
       <div class="big">Podía mandar<br>el mensaje típico…</div>
@@ -253,97 +235,143 @@
     </section>
 
     <!-- SLIDE 4 -->
-    <section class="slide bg4">
+    <section class="slide bg4" aria-label="Final">
       <div class="kicker">final</div>
       <div class="big">Feliz cumple ✨</div>
       <div class="sub">Te dejo la última parte aquí 👇</div>
 
       <img src="foto3.jpg" class="photo" alt="">
 
-      <!-- CAMBIA ESTE LINK -->
+      <!-- WhatsApp (your number + prefilled text) -->
       <a class="btn" id="finalLink"
-        href="https://wa.me/525548106406?text=Ok,%20ahora%20sí:%20feliz%20cumple%20a%20una%20de%20las%20personas%20que%20más%20quiero%20en%20mi%20vida%20:)"
-   target="_blank" rel="noreferrer">
+         href="https://wa.me/525548106406?text=Ok,%20ahora%20sí:%20feliz%20cumple%20a%20una%20de%20las%20personas%20que%20más%20quiero%20en%20mi%20vida%20:)"
+         target="_blank" rel="noreferrer">
         Tu sorpresa 🎁
       </a>
 
-
-      <!-- pin de pizza -->
+      <!-- Pizza pin -->
       <img src="foto4.jpg" class="photo-small" alt="">
 
       <div class="hint">PD: sí, esto era necesario.</div>
     </section>
 
-    <audio id="audio"></audio>
+    <audio id="audio" preload="auto"></audio>
   </div>
 
   <script>
     const slides = [...document.querySelectorAll('.slide')];
     const bars = [...document.querySelectorAll('.bar i')];
+
     const audio = document.getElementById('audio');
     const startBtn = document.getElementById('startBtn');
     const wrap = document.getElementById('wrap');
-    const finalLink = document.getElementById('finalLink');
 
-    const track1 = "track1.mp3"; // inicia en 0:11
-    const track2 = "track2.mp3"; // inicia en 0:19
-    const track3 = "track3.mp3"; // inicia en 1:25
+    // Your local files in the repo
+    const track1 = "track1.mp3"; // start at 0:11
+    const track2 = "track2.mp3"; // start at 0:19
+    const track3 = "track3.mp3"; // start at 1:25
 
+    // Slides → tracks (4 slides, 3 tracks)
     const tracks  = [track1, track1, track2, track3];
     const offsets = [11, 11, 19, 85];
 
     let idx = 0;
     let started = false;
 
-    tracks.forEach(src=>{
+    // Preload tracks to reduce lag
+    tracks.forEach(src => {
       const a = new Audio();
-      a.preload="auto";
-      a.src=src;
+      a.preload = "auto";
+      a.src = src;
     });
 
     function setBar(n){
-      bars.forEach((b,i)=> b.style.width = (i <= n ? "100%" : "0%"));
+      bars.forEach((b,i) => b.style.width = (i <= n ? "100%" : "0%"));
     }
 
     function playTrackForSlide(i){
       if(!started) return;
 
-      audio.pause();
-      audio.currentTime = 0;
+      const src = tracks[i];
+      const startAt = offsets[i] || 0;
 
-      audio.src = tracks[i];
+      try{
+        audio.pause();
+        audio.currentTime = 0;
+      } catch {}
 
-      audio.onloadedmetadata = ()=>{
-        audio.currentTime = offsets[i] || 0;
+      // Ensure we re-seek after metadata is available
+      audio.onloadedmetadata = null;
+
+      if(audio.src !== new URL(src, window.location.href).href){
+        audio.src = src;
+      }
+
+      const seekAndPlay = () => {
+        // clamp if the file is shorter
+        const dur = audio.duration;
+        if(Number.isFinite(dur) && dur > 0){
+          audio.currentTime = Math.min(startAt, Math.max(0, dur - 0.25));
+        } else {
+          audio.currentTime = startAt;
+        }
         audio.play().catch(()=>{});
       };
+
+      if(audio.readyState >= 1){
+        // metadata already available
+        seekAndPlay();
+      } else {
+        audio.onloadedmetadata = seekAndPlay;
+        // force load on some browsers
+        audio.load();
+      }
     }
 
     function go(n){
-      idx = Math.max(0, Math.min(slides.length-1, n));
-      slides.forEach((s,i)=> s.classList.toggle('active', i===idx));
+      idx = Math.max(0, Math.min(slides.length - 1, n));
+      slides.forEach((s,i)=> s.classList.toggle('active', i === idx));
       setBar(idx);
       playTrackForSlide(idx);
     }
 
-    function next(){ if(idx < slides.length-1) go(idx+1); }
-    function prev(){ if(idx > 0) go(idx-1); }
+    function next(){ if(idx < slides.length - 1) go(idx + 1); }
+    function prev(){ if(idx > 0) go(idx - 1); }
 
-    startBtn.addEventListener('click', ()=>{
+    // Start: stop propagation so it doesn't trigger story navigation
+    startBtn.addEventListener('click', (e)=>{
+      e.preventDefault();
+      e.stopPropagation();
       started = true;
       go(1);
     });
 
-    wrap.addEventListener('click', e=>{
+    // Story navigation: pointerup works on mobile + desktop
+    wrap.addEventListener('pointerup', (e)=>{
       if(!started) return;
-      if(e.target === finalLink) return;
+
+      // If user tapped a link/button, don't navigate
+      if(e.target.closest('a, button')) {
+        // But allow navigation if they tapped somewhere else on the slide
+        // (i.e., only block when the tap is actually on a control)
+        return;
+      }
 
       const x = e.clientX;
       const w = window.innerWidth;
-      if(x < w*0.35) prev();
+
+      if(x < w * 0.35) prev();
       else next();
     });
 
+    // Optional: keyboard navigation on desktop
+    window.addEventListener('keydown', (e)=>{
+      if(!started) return;
+      if(e.key === "ArrowRight") next();
+      if(e.key === "ArrowLeft") prev();
+    });
+
+    // Initial progress
     setBar(0);
   </script>
 </body>
