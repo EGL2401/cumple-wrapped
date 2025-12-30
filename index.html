@@ -31,7 +31,7 @@
       padding:28px;
       opacity:0;
       transform:scale(1.02);
-      transition:.45s ease;
+      transition:opacity .45s ease, transform .45s ease;
       text-align:center;
       pointer-events:none;
     }
@@ -41,52 +41,137 @@
       pointer-events:auto;
     }
 
-    .bg1{ background:linear-gradient(135deg,#0b0b10,#1b0f2e); }
-    .bg2{ background:linear-gradient(135deg,#070a12,#0a2a2a); }
-    .bg3{ background:linear-gradient(135deg,#070a12,#2b0a14); }
-    .bg4{ background:linear-gradient(135deg,#050509,#101018); }
+    /* Fondos “anteriores” */
+    .bg1{
+      background:
+        radial-gradient(1200px 800px at 20% 20%, #6a00ff33, transparent 55%),
+        linear-gradient(135deg, #0b0b10, #1b0f2e);
+    }
+    .bg2{
+      background:
+        radial-gradient(900px 700px at 70% 30%, #00ffd533, transparent 55%),
+        linear-gradient(135deg, #070a12, #0a2a2a);
+    }
+    .bg3{
+      background:
+        radial-gradient(900px 700px at 30% 70%, #ff2a6d33, transparent 55%),
+        linear-gradient(135deg, #070a12, #2b0a14);
+    }
 
-    /* 🌻 Fondo cálido tipo “girasoles” para slides finales */
+    /* 🌻 Fondo girasoles “anterior” (el dorado sutil sobre oscuro) */
     .bg-sunflower{
       background:
         radial-gradient(900px 650px at 65% 30%, rgba(255, 196, 0, .18), transparent 55%),
         radial-gradient(850px 650px at 25% 75%, rgba(255, 176, 0, .12), transparent 58%),
-        linear-gradient(135deg, #060607, #141014);
+        linear-gradient(135deg, #050509, #101018);
     }
 
+    /* Barra superior tipo stories */
     .bar{
-      position:absolute; top:16px; left:16px; right:16px;
-      height:4px; display:flex; gap:8px; z-index:10;
+      position:absolute;
+      top:16px;
+      left:16px;
+      right:16px;
+      height:4px;
+      display:flex;
+      gap:8px;
+      z-index:10;
+      pointer-events:none;
     }
-    .bar span{ flex:1; background:#ffffff1e; border-radius:99px; }
+    .bar span{
+      flex:1;
+      background:#ffffff1e;
+      border-radius:99px;
+      overflow:hidden;
+    }
     .bar i{
-      display:block; height:100%; width:0%;
-      background:linear-gradient(90deg,var(--accent),#7cffc2);
-      border-radius:99px; transition:.35s;
+      display:block;
+      height:100%;
+      width:0%;
+      background:linear-gradient(90deg, var(--accent), #7cffc2);
+      border-radius:99px;
+      transition:width .35s ease;
     }
 
-    .big{ font-size:clamp(34px,7vw,64px); font-weight:800; }
-    .big-xl{ font-size:clamp(44px,9vw,86px); }
-    .sub{ margin-top:14px; font-size:clamp(16px,3.5vw,22px); opacity:.9; }
+    .kicker{
+      letter-spacing:.16em;
+      text-transform:uppercase;
+      font-weight:700;
+      opacity:.85;
+      font-size:12px;
+      margin-bottom:10px;
+    }
+    .big{
+      margin:0;
+      font-size:clamp(34px, 7vw, 64px);
+      line-height:1.02;
+      font-weight:800;
+    }
+    .big-xl{
+      font-size: clamp(44px, 9vw, 86px);
+      line-height: 0.98;
+    }
+    .sub{
+      margin-top:14px;
+      max-width:860px;
+      font-size:clamp(16px, 3.5vw, 22px);
+      line-height:1.35;
+      opacity:.92;
+    }
 
+    .btn{
+      margin-top:22px;
+      padding:14px 18px;
+      border-radius:14px;
+      border:1px solid #ffffff22;
+      background:#ffffff12;
+      color:var(--txt);
+      font-weight:750;
+      cursor:pointer;
+      display:inline-flex;
+      align-items:center;
+      gap:10px;
+      text-decoration:none;
+      transition:background .2s ease;
+      touch-action: manipulation;
+    }
+    .btn:hover{ background:#ffffff18; }
+
+    .hint{
+      position:absolute;
+      bottom:18px;
+      opacity:.65;
+      font-size:12px;
+      pointer-events:none;
+    }
+
+    /* Fotos */
     .photo{
       width:min(80vw,440px);
       border-radius:18px;
       margin-top:18px;
       box-shadow:0 20px 60px #0006;
+      filter:brightness(.95) contrast(1.05);
     }
     .photo-small{
       width:min(50vw,260px);
       border-radius:16px;
       margin-top:18px;
       box-shadow:0 16px 50px #0005;
+      filter:brightness(.97) contrast(1.03);
     }
 
+    /* Mosaicos */
     .decor{
-      position:absolute; inset:0; pointer-events:none;
-      opacity:.07; background-size:56px 56px; background-repeat:repeat;
+      position:absolute;
+      inset:0;
+      pointer-events:none;
+      opacity:.07;
+      background-size:56px 56px;
+      background-repeat:repeat;
     }
 
+    /* :) mosaic */
     .decor.smiley{
       background-image:url("data:image/svg+xml;utf8,\
 <svg xmlns='http://www.w3.org/2000/svg' width='44' height='44'>\
@@ -94,132 +179,193 @@
 </svg>");
     }
 
+    /* 🐼 Panditas mosaic */
     .decor.panditas{
       background-image:url("data:image/svg+xml;utf8,\
-<svg xmlns='http://www.w3.org/2000/svg' width='44' height='44'>\
-<rect x='14' y='10' width='6' height='6' fill='%23fff'/>\
-<rect x='24' y='10' width='6' height='6' fill='%23fff'/>\
-<rect x='16' y='14' width='12' height='12' fill='%23fff'/>\
-<rect x='18' y='18' width='3' height='3' fill='%23000'/>\
-<rect x='23' y='18' width='3' height='3' fill='%23000'/>\
+<svg xmlns='http://www.w3.org/2000/svg' width='44' height='44' viewBox='0 0 44 44'>\
+  <rect width='44' height='44' fill='none'/>\
+  <rect x='14' y='10' width='6' height='6' fill='%23ffffff'/>\
+  <rect x='24' y='10' width='6' height='6' fill='%23ffffff'/>\
+  <rect x='16' y='14' width='12' height='12' fill='%23ffffff'/>\
+  <rect x='18' y='18' width='3' height='3' fill='%23000000'/>\
+  <rect x='23' y='18' width='3' height='3' fill='%23000000'/>\
+  <rect x='21' y='22' width='2' height='2' fill='%23000000'/>\
 </svg>");
     }
 
+    /* 🌻 Girasoles mosaic */
     .decor.girasoles{
       background-image:url("data:image/svg+xml;utf8,\
-<svg xmlns='http://www.w3.org/2000/svg' width='44' height='44'>\
-<rect x='20' y='8' width='4' height='6' fill='%23FFB000'/>\
-<rect x='8' y='20' width='6' height='4' fill='%23FFB000'/>\
-<rect x='19' y='19' width='6' height='6' fill='%23FFD700'/>\
+<svg xmlns='http://www.w3.org/2000/svg' width='44' height='44' viewBox='0 0 44 44'>\
+  <rect width='44' height='44' fill='none'/>\
+  <rect x='20' y='8' width='4' height='6' fill='%23FFB000'/>\
+  <rect x='20' y='30' width='4' height='6' fill='%23FFB000'/>\
+  <rect x='8' y='20' width='6' height='4' fill='%23FFB000'/>\
+  <rect x='30' y='20' width='6' height='4' fill='%23FFB000'/>\
+  <rect x='12' y='12' width='5' height='5' fill='%23FFB000'/>\
+  <rect x='27' y='12' width='5' height='5' fill='%23FFB000'/>\
+  <rect x='12' y='27' width='5' height='5' fill='%23FFB000'/>\
+  <rect x='27' y='27' width='5' height='5' fill='%23FFB000'/>\
+  <rect x='19' y='19' width='6' height='6' fill='%23FFD700'/>\
 </svg>");
-    }
-
-    button{
-      margin-top:22px; padding:14px 18px;
-      border-radius:14px; border:none;
-      background:#ffffff12; color:white;
-      font-weight:700;
     }
   </style>
 </head>
 
 <body>
-<div class="wrap" id="wrap">
-  <div class="bar">
-    <span><i></i></span><span><i></i></span><span><i></i></span>
-    <span><i></i></span><span><i></i></span><span><i></i></span><span><i></i></span>
+  <div class="wrap" id="wrap">
+    <div class="bar" aria-hidden="true">
+      <span><i></i></span>
+      <span><i></i></span>
+      <span><i></i></span>
+      <span><i></i></span>
+      <span><i></i></span>
+      <span><i></i></span>
+      <span><i></i></span>
+    </div>
+
+    <!-- 1 -->
+    <section class="slide bg1 active" aria-label="Inicio">
+      <div class="kicker">MEJOR CON AUDÍFONOS</div>
+      <div class="big">Ok.<br>Dos minutos.</div>
+      <div class="sub">Toca <b>Iniciar</b> para activar el audio.</div>
+      <button class="btn" id="startBtn" type="button">Iniciar ▶</button>
+      <div class="hint">Tap derecha = siguiente · izquierda = atrás</div>
+    </section>
+
+    <!-- 2 (Foto 1) -->
+    <section class="slide bg2" aria-label="Feliz cumpleaños">
+      <div class="decor smiley"></div>
+      <div class="big big-xl">Feliz cumpleaños</div>
+      <div class="sub">a una de las personas más especiales en mi vida</div>
+      <img src="foto1.jpg" class="photo" alt="">
+    </section>
+
+    <!-- 3 (continúa música) -->
+    <section class="slide bg2" aria-label="Simbolismos">
+      <div class="decor smiley"></div>
+      <div class="big">Esto está lleno<br>de simbolismos</div>
+      <div class="sub">que nos identifican…</div>
+    </section>
+
+    <!-- 4 (Foto 2) -->
+    <section class="slide bg3" aria-label="Cambiar el juego">
+      <div class="decor panditas"></div>
+      <div class="big">Podía mandar<br>el mensaje típico…</div>
+      <div class="sub">pero preferí cambiar el juego</div>
+      <img src="foto2.jpg" class="photo" alt="">
+    </section>
+
+    <!-- 5 (sin foto, continúa música) -->
+    <section class="slide bg3" aria-label="Nada aburrido">
+      <div class="decor panditas"></div>
+      <div class="big">porque sé que</div>
+      <div class="sub">las cosas aburridas no son tus favoritas</div>
+    </section>
+
+    <!-- 6 (Foto 3) -->
+    <section class="slide bg-sunflower" aria-label="Te quiero mucho">
+      <div class="decor girasoles"></div>
+      <div class="big">Te quiero mucho<br>guapa…</div>
+      <div class="sub">y quería decírtelo diferente.</div>
+      <img src="foto3.jpg" class="photo" alt="">
+    </section>
+
+    <!-- 7 (Foto 4 más pequeña, continúa música) -->
+    <section class="slide bg-sunflower" aria-label="Siempre">
+      <div class="decor girasoles"></div>
+      <div class="big">Siempre estaré<br>para ti :)</div>
+      <img src="foto4.jpg" class="photo-small" alt="">
+    </section>
+
+    <audio id="audio" preload="auto"></audio>
   </div>
 
-  <!-- 1 -->
-  <section class="slide bg1 active">
-    <div class="big">Ok.<br>Dos minutos.</div>
-    <div class="sub">Toca iniciar</div>
-    <button id="startBtn">Iniciar ▶</button>
-  </section>
+  <script>
+    const slides = [...document.querySelectorAll('.slide')];
+    const bars = [...document.querySelectorAll('.bar i')];
+    const audio = document.getElementById('audio');
+    const startBtn = document.getElementById('startBtn');
+    const wrap = document.getElementById('wrap');
 
-  <!-- 2 -->
-  <section class="slide bg2">
-    <div class="decor smiley"></div>
-    <div class="big big-xl">Feliz cumpleaños</div>
-    <div class="sub">a una de las personas más especiales en mi vida</div>
-    <img src="foto1.jpg" class="photo">
-  </section>
+    let idx = 0;
+    let started = false;
 
-  <!-- 3 -->
-  <section class="slide bg2">
-    <div class="decor smiley"></div>
-    <div class="big">Esto está lleno<br>de simbolismos</div>
-    <div class="sub">que nos identifican…</div>
-  </section>
+    const tracks  = ["track1.mp3","track1.mp3","track1.mp3","track2.mp3","track2.mp3","track3.mp3","track3.mp3"];
+    const offsets = [11,11,11,19,19,85,85];
 
-  <!-- 4 -->
-  <section class="slide bg3">
-    <div class="decor panditas"></div>
-    <div class="big">Podía mandar<br>el mensaje típico…</div>
-    <div class="sub">pero preferí cambiar el juego</div>
-    <img src="foto2.jpg" class="photo">
-  </section>
+    // NO reiniciar entre 2->3, 4->5, 6->7  (0-based: 2,4,6)
+    const continueOn = new Set([2,4,6]);
 
-  <!-- 5 -->
-  <section class="slide bg3">
-    <div class="decor panditas"></div>
-    <div class="big">porque sé que</div>
-    <div class="sub">las cosas aburridas no son tus favoritas</div>
-  </section>
+    function setBar(n){
+      bars.forEach((b,i)=> b.style.width = (i <= n ? "100%" : "0%"));
+    }
 
-  <!-- 6 (🌻 fondo girasol + mosaico) -->
-  <section class="slide bg-sunflower">
-    <div class="decor girasoles"></div>
-    <div class="big">Te quiero mucho<br>guapa…</div>
-    <div class="sub">y quería decirtelo diferente.</div>
-    <img src="foto3.jpg" class="photo">
-  </section>
+    function play(i){
+      if(!started) return;
 
-  <!-- 7 (🌻 fondo girasol + mosaico) -->
-  <section class="slide bg-sunflower">
-    <div class="decor girasoles"></div>
-    <div class="big">Siempre estaré<br>para ti :)</div>
-    <img src="foto4.jpg" class="photo-small">
-  </section>
+      const src = tracks[i];
+      const abs = new URL(src, window.location.href).href;
+      const sameTrack = (audio.src === abs);
 
-  <audio id="audio"></audio>
-</div>
+      if(continueOn.has(i) && sameTrack){
+        if(audio.paused) audio.play().catch(()=>{});
+        return;
+      }
 
-<script>
-const slides=[...document.querySelectorAll('.slide')];
-const bars=[...document.querySelectorAll('.bar i')];
-const audio=document.getElementById('audio');
-const startBtn=document.getElementById('startBtn');
-let idx=0, started=false;
+      audio.onloadedmetadata = null;
 
-const tracks=["track1.mp3","track1.mp3","track1.mp3","track2.mp3","track2.mp3","track3.mp3","track3.mp3"];
-const offsets=[11,11,11,19,19,85,85];
-const continueOn=new Set([2,4,6]);
+      if(!sameTrack) audio.src = src;
 
-function setBar(n){ bars.forEach((b,i)=>b.style.width=i<=n?"100%":"0%"); }
+      const seekAndPlay = () => {
+        const dur = audio.duration;
+        const seekTo = offsets[i] || 0;
+        if(Number.isFinite(dur) && dur > 0){
+          audio.currentTime = Math.min(seekTo, Math.max(0, dur - 0.25));
+        } else {
+          audio.currentTime = seekTo;
+        }
+        audio.play().catch(()=>{});
+      };
 
-function play(i){
-  if(!started) return;
-  const src=tracks[i];
-  const same=audio.src.includes(src);
-  if(continueOn.has(i)&&same){ audio.play(); return; }
-  audio.src=src;
-  audio.onloadedmetadata=()=>{ audio.currentTime=offsets[i]; audio.play(); };
-}
+      if(audio.readyState >= 1) seekAndPlay();
+      else { audio.onloadedmetadata = seekAndPlay; audio.load(); }
+    }
 
-function go(n){
-  idx=Math.max(0,Math.min(slides.length-1,n));
-  slides.forEach((s,i)=>s.classList.toggle('active',i===idx));
-  setBar(idx); play(idx);
-}
+    function go(n){
+      idx = Math.max(0, Math.min(slides.length - 1, n));
+      slides.forEach((s,i)=> s.classList.toggle('active', i === idx));
+      setBar(idx);
+      play(idx);
+    }
 
-startBtn.onclick=e=>{ e.stopPropagation(); started=true; go(1); };
+    function next(){ if(idx < slides.length - 1) go(idx + 1); }
+    function prev(){ if(idx > 0) go(idx - 1); }
 
-document.getElementById('wrap').addEventListener('pointerup',e=>{
-  if(!started) return;
-  const x=e.clientX;
-  x<innerWidth*0.35?go(idx-1):go(idx+1);
-});
-</script>
+    startBtn.addEventListener('click', (e)=>{
+      e.preventDefault();
+      e.stopPropagation();
+      started = true;
+      go(1); // salta al slide 2
+    });
+
+    wrap.addEventListener('pointerup', (e)=>{
+      if(!started) return;
+      if(e.target.closest('button')) return; // no navegar al tocar el botón
+
+      const x = e.clientX;
+      const w = window.innerWidth;
+      if(x < w * 0.35) prev();
+      else next();
+    });
+
+    window.addEventListener('keydown', (e)=>{
+      if(!started) return;
+      if(e.key === "ArrowRight") next();
+      if(e.key === "ArrowLeft") prev();
+    });
+
+    setBar(0);
+  </script>
 </body>
 </html>
